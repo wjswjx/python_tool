@@ -143,14 +143,3 @@ for path in path_list:
                      transform=trans, projection=proj,
                      dtype=gdal.GDT_Float32)
     ldata_list.append(ldata_array)
-
-#'''validation after lst sacle'''
-#for path in path_list:
-#    image_name = path.name
-#    ldata_array = gdal_array.LoadFile(str(path))
-#    if np.where(np.isnan(ldata_array))
-
-        
-    
-
-    
