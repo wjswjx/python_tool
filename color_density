@@ -1,0 +1,94 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Mar 20 16:13:50 2019
+
+@author: shepherd
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+from scipy.interpolate import interpn
+import scipy.io as sio
+start = time.time()
+
+def density_scatter( x , y, ax = None, sort = True, bins = 20, **kwargs )   :
+    """
+    Scatter plot colored by 2d histogram
+    """
+    if ax is None :
+        fig , ax = plt.subplots()
+    data , x_e, y_e = np.histogram2d( x, y, bins = bins)
+    z = interpn( ( 0.5*(x_e[1:] + x_e[:-1]) , 0.5*(y_e[1:]+y_e[:-1]) ) , data , np.vstack([x,y]).T , method = "splinef2d", bounds_error = False )
+
+    # Sort the points by density, so that the densest points are plotted last
+    if sort :
+        idx = z.argsort()
+        x, y, z = x[idx], y[idx], z[idx]
+
+    sc=ax.scatter( x, y, s=1, c=z, **kwargs )#s means the marker size;
+#    colorbar().ax.tick_params(axis='y', direction='out')#设置colorbar标签方向；
+    plt.colorbar(sc).ax.tick_params(direction='in')
+    
+    #设置坐标刻度值的大小以及刻度值的字体
+    plt.tick_params(labelsize=13)
+    labels = ax.get_xticklabels() + ax.get_yticklabels()
+    [label.set_fontname('Times New Roman') for label in labels]
+     
+    #设置横纵坐标及标题的名称以及对应字体格式
+    font2 = {'family' : 'Times New Roman',
+    'weight' : 'normal',
+    'size'   : 18,
+    }
+
+    #设置坐标轴范围
+#    plt.xlim((min(x), max(y)))
+#    plt.ylim((min(y), max(y)))
+    plt.xlim((270, 340))
+    plt.ylim((270, 340))
+    ax.tick_params(direction='in')#设置标签方向
+    #设置坐标轴刻度
+    plt.xticks(np.linspace(270, 340, 6.0))
+    plt.yticks(np.linspace(270, 340, 6.0))
+    plt.gca().set_aspect('equal', adjustable='box')#xy轴长度相同；
+    x1 = (270,340)
+    y1 = (270,340)
+    plt.plot(x1,y1,color='black',markersize=1)
+#    plt.plot(x1,y1,color='black', marker='o', linestyle='-', linewidth=1, markersize=6)
+    plt.xlabel('Satellite LST',font2)
+    plt.ylabel('PGP LST',font2)
+    plt.title('Satellite vs PGP',font2) 
+    return ax
+
+
+
+if "__main__" == __name__ :
+
+    data = sio.loadmat('E:/GPR/software/LSTPGP/X_axis_RS2_day260.mat');
+    x = data["X_axis_RS2"]
+    x = x.reshape((len(x),));
+    
+    data1 = sio.loadmat('E:/GPR/software/LSTPGP/Y_axis_GPR_day260.mat');
+    y = data1["Y_axis_GPR"]
+    y = y.reshape((len(y),));
+    density_scatter( x, y, bins = [25,25] ,cmap='jet')
+    #将文件保存至文件中并且画出图
+    plt.savefig('scatter1.jpg')
+#    
+#    data = sio.loadmat('D:\\Project\\00LSE\\code\\LSE2.mat');
+#    y = data['LSE2']
+#    y=y.reshape((len(y),));
+#    density_scatter( x, y, bins = [30,30] ,cmap='jet')
+#    #将文件保存至文件中并且画出图
+#    plt.savefig('scatter2.jpg')
+#    
+#    data = sio.loadmat('D:\\Project\\00LSE\\code\\LSE3.mat');
+#    y = data['LSE3']
+#    y=y.reshape((len(y),));
+#    density_scatter( x, y, bins = [30,30] ,cmap='jet')
+#    #将文件保存至文件中并且画出图
+#    plt.savefig('scatter3.jpg')
+
+end = time.time()
+
+print(end-start)
