@@ -110,7 +110,7 @@ Rndaily_rs, Rndaily_rs_path_list, Rndaily_name, row, col = load_tif_data(Rndaily
 Ndvi_rs, Ndvi_rs_path_list, Ndvi_name, row, col = load_tif_data(Ndvi_rs_dir)
 
 et_name = []
-method = 'RF'
+method = 'ANN'
 for j in Lst_name:
     file_name = 'ET'+ j[9:27] + method + '.tif'
     et_name.append(file_name)
