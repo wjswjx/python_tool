@@ -2,7 +2,7 @@
 """
 Created on Mon May  6 17:10:20 2019
 
-@author: Thinkpad
+@author: Xiangligiser@gmail.com
 """
 #https://dsaber.com/2014/05/28/bayesian-regression-with-pymc-a-brief-tutorial/
 import numpy as np
